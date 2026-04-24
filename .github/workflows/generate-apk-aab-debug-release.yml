@@ -3,6 +3,7 @@ name: Generated APK AAB (Push Github - Create Artifact To Github Action)
 env:
   main_project_module: app
   playstore_name: BudgetBuddy
+  bundletool_version: 1.17.2
 
 on:
   push:
@@ -47,6 +48,30 @@ jobs:
       - name: Build app bundle release (AAB) - ${{ env.main_project_module }} module
         run: ./gradlew ${{ env.main_project_module }}:bundleRelease
 
+      # ── Bundle Tool Steps ──
+      - name: Download Bundletool
+        run: |
+          wget -q https://github.com/google/bundletool/releases/download/${{ env.bundletool_version }}/bundletool-all-${{ env.bundletool_version }}.jar -O bundletool.jar
+
+      - name: Set Env Artifact name from generated AAB
+        run: |
+          cd ${{ env.main_project_module }}/build/outputs/bundle/release/
+          files=(*)
+          echo "generated_name_aab=${files[0]%.*}" >> $GITHUB_ENV
+
+      - name: Build APK(s) from AAB using Bundletool
+        run: |
+          java -jar bundletool.jar build-apks \
+            --bundle=${{ env.main_project_module }}/build/outputs/bundle/release/${{ env.generated_name_aab }}.aab \
+            --output=${{ env.main_project_module }}/build/outputs/bundle/release/${{ env.generated_name_aab }}.apks \
+            --mode=universal
+
+      - name: Extract universal APK from APKS
+        run: |
+          cd ${{ env.main_project_module }}/build/outputs/bundle/release/
+          unzip -p ${{ env.generated_name_aab }}.apks universal.apk > ${{ env.generated_name_aab }}.apk
+
+      # ── Upload Artifacts ──
       - name: Upload APK Debug - ${{ env.repository_name }}
         uses: actions/upload-artifact@v4
         with:
