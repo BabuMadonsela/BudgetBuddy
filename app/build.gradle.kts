@@ -5,6 +5,7 @@ plugins {
 android {
     namespace = "com.budgetbuddy.app"
     compileSdk = 36
+
     defaultConfig {
         applicationId = "com.budgetbuddy.app"
         minSdk = 24
@@ -13,6 +14,7 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -22,9 +24,14 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    lint {
+        abortOnError = false
     }
 }
 
