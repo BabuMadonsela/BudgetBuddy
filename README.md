@@ -1,7 +1,7 @@
 # 💰 BudgetBuddy
 
 > A personal finance Android app built in Kotlin — track expenses, set budget goals, attach receipt photos, visualise spending, and earn badges for good habits.
-
+> Application video link - https://youtu.be/Fsdxsj9y_5Y?si=JoubUSspbnbyyval
 ---
 
 ## Table of Contents
